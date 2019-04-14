@@ -1,0 +1,32 @@
+version: '3'
+services:
+  redis:
+    image: redis:latest
+    ports:
+      - ${REDIS_PORT:?err}:${REDIS_PORT:?err}
+
+  proxy:
+    restart: always
+    build: ./proxy
+    ports:
+      - ${PROXY_PORT:?err}:${PROXY_PORT:?err}
+    env_file:
+      - .env
+    environment:
+      - REDIS_HOST=redis
+    volumes:
+      - ./proxy/.:/usr/src/app
+    depends_on:
+      - 'redis'
+
+  e2e:
+    build: ./e2e
+    env_file:
+      - .env
+    environment:
+      - REDIS_HOST=redis
+      - PROXY_HOST=proxy
+    volumes:
+      - ./e2e/.:/usr/src/app
+    depends_on:
+      - 'proxy'
