@@ -6,7 +6,7 @@
 
 1. __proxy:__ the Proxy web service talks with the Redis service over HTTP or RESP (configured in .env). This is a containerized Flask application using Gunicorn as the WSGI to handle concurrency. For the purposes of this assignment we set only a single worker and cap the number of threads at `2 * num_cores` on the proxy container. We spawn only a single worker process to ensure consistency with our __RedisCache__, otherwise we would have an instance of __RedisCache__ inside each worker process.
 
- ⋅⋅⋅__RedisCache:__ the Proxy web service offloads most of the heavy lifting onto this implementation of a RedisCache. It is an LRU Cache implementation with per-item time-to-live (TTL) setting based on [cachetools](https://github.com/tkem/cachetools/blob/master/cachetools/ttl.py) package. We have overridden the \__missing__ method to perform a roundtrip to our Redis backing instance if key is not currently in cache.
+   __RedisCache:__ the Proxy web service offloads most of the heavy lifting onto this implementation of a RedisCache. It is an LRU Cache implementation with per-item time-to-live (TTL) setting based on [cachetools](https://github.com/tkem/cachetools/blob/master/cachetools/ttl.py) package. We have overridden the \__missing__ method to perform a roundtrip to our Redis backing instance if key is not currently in cache.
 
 1. __e2e:__ a standalone end-to-end testing container as called out in requirements. Returns non-zero exit code if tests fail. If I had enough time I would have liked to write some unittests for my RedisCache subclass of [TTLCache](https://github.com/tkem/cachetools/blob/master/cachetools/ttl.py). The original author has decent [test coverage](https://github.com/tkem/cachetools/tree/master/tests) so we should be OK for now.
 
