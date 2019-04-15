@@ -1,10 +1,11 @@
 # __Redis Proxy Challenge (Segment)__: *James Groeneveld*
+A super simple in-memory
 
 ## __High-level architecture overview__
 ### Components
-1. [__client:__] the client can talk to the Proxy web service over HTTP or RESP -- this is left for the user.
+1. [__client:__] the client can talk to the Proxy web service over HTTP -- this is left for the user.
 
-1. __proxy:__ the Proxy web service talks with the Redis service over HTTP or RESP (configured in .env). This is a containerized Flask application using Gunicorn as the WSGI to handle concurrency. For the purposes of this assignment we set only a single worker and cap the number of threads at `2 * num_cores` on the proxy container. We spawn only a single worker process to ensure consistency with our __RedisCache__, otherwise we would have an instance of __RedisCache__ inside each worker process.
+1. __proxy:__ the Proxy web service talks with the Redis service over HTTP. This is a containerized Flask application using Gunicorn as the WSGI to handle concurrency. For the purposes of this assignment we set only a single worker and cap the number of threads at `2 * num_cores` on the proxy container. We spawn only a single worker process to ensure consistency with our __RedisCache__, otherwise we would have an instance of __RedisCache__ inside each worker process.
 
    __RedisCache:__ the Proxy web service offloads most of the heavy lifting onto this implementation of a RedisCache. It is an LRU Cache implementation with per-item time-to-live (TTL) setting based on [cachetools](https://github.com/tkem/cachetools/blob/master/cachetools/ttl.py) package. We have overridden the \__missing__ method to perform a roundtrip to our Redis backing instance if key is not currently in cache.
 
@@ -105,3 +106,8 @@ __Run proxy (and redis)__
 1. __misc:__ 3hrs
 
    Spent reading about best practices (e.g. flask, docker, max_threads) and certain trade offs e.g. treating e2e testing as it's own service for extensibility, rather than setting an environment variable and running tests inside the application container.
+
+## Unimplemented
+
+* Some unit tests may have been helpful (inside the proxy service).  
+* RESP protocol for proxy
