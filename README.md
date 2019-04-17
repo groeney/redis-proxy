@@ -68,18 +68,18 @@ __LRU__
 
 Cachetools uses a dictionary mapping to a doubly linked list under the hood. Because deletion and insertion into a doubly linked list and dictionary are both __O(1)__ the complexity of the LRU implementation is as follows:
 
-* __set:__ O(1)  
-* __get:__ O(1)  
-* __evict:__ O(1)
+* __set:__ time -- O(1), space -- O(1)
+* __get:__ time -- O(1), space -- O(1)
+* __evict:__ time -- O(1), space -- O(1)
 
 
 __TTL__
 
-This implementation of TTL Cache will attempt to remove all expired keys on every state mutation. Beacuse in the worst case we may need to expire all keys on any given mutation the complexity of the TTL implementation is as follows:
+This implementation of TTL Cache will attempt to remove all expired keys on every state mutation. Because in the worst case we may need to expire all keys on any given mutation the complexity of the TTL implementation is as follows:
 
-* __set:__ O(n)
-* __get:__ O(n)
-* __expire:__ O(1)
+* __set:__ time -- O(n), space -- O(1)
+* __get:__ time -- O(n), space -- O(1)
+* __expire:__ time -- O(1), space -- O(1)
 
 In practice, when we take TTL's `set` and `get` and amortize it over time we get an effective O(1) for each operation.
 
